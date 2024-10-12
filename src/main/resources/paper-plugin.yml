@@ -1,0 +1,17 @@
+name: ElyTools
+version: '1.0-SNAPSHOT'
+main: me.wertiko.elyTools.ElyTools
+api-version: '1.21'
+
+commands:
+  description:
+    usage: /<command>
+  size:
+    description: Edit self size
+    usage: /size <размер>
+
+permissions:
+  elytools.description:
+    default: false
+  elytools.size:
+    default: false

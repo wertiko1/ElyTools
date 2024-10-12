@@ -1,0 +1,13 @@
+# Module size
+size:
+  size-min: 0.7
+  size-max: 1.1
+  size-step: 0.1
+
+  # Substitute %size%
+  messages:
+    fail: "&cВведите одно из предложенных значений!"
+    success: "&fВаш размер изменён на &7%size%"
+    no-permission: "&cУ тебя нет права использовать эту команду!"
+
+  need-permission: true

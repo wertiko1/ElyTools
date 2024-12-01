@@ -1,28 +1,30 @@
 package me.wertiko.elyTools.listeners;
 
-import org.bukkit.ChatColor;
+import me.wertiko.elyTools.DatabaseManager;
+import me.wertiko.elyTools.ElyTools;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerClickListener implements Listener {
-
-    private final JavaPlugin plugin;
+    private final ElyTools plugin;
     private final long cooldown = 500;
     private final Map<Player, Long> lastInteractionTimes = new HashMap<>();
+    private DatabaseManager databaseManager;
 
-    public PlayerClickListener(JavaPlugin plugin) {
+    public PlayerClickListener(@NotNull ElyTools plugin) {
+        this.databaseManager = plugin.getDatabaseManager();
         this.plugin = plugin;
-        plugin.getLogger().info("Включен PlayerClickListener");
     }
 
     @EventHandler
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+    public void onPlayerInteractEntity(@NotNull PlayerInteractEntityEvent event) {
         if (event.getRightClicked() instanceof Player) {
             Player clickPlayer = (Player) event.getRightClicked();
             Player clickingPlayer = event.getPlayer();
@@ -34,11 +36,25 @@ public class PlayerClickListener implements Listener {
                 return;
             }
 
-            String description = plugin.getConfig().getString("descriptions." + clickPlayer.getUniqueId(), "нет");
-            clickingPlayer.sendMessage(ChatColor.LIGHT_PURPLE + "Вы толкнули " + ChatColor.GRAY + clickPlayer.getName() + ChatColor.DARK_PURPLE + "\nОписание: " + ChatColor.GRAY + description);
-            clickPlayer.sendMessage(ChatColor.LIGHT_PURPLE + "Вас толкнул " + ChatColor.GRAY + clickingPlayer.getName());
-            lastInteractionTimes.put(clickingPlayer, currentTime);
+            if (this.databaseManager.isDescriptionEnabled(clickingPlayer)) {
+                String description = this.databaseManager.getDescription(clickPlayer);
+                String message;
+                if (description != null) {
+                    message = plugin.config.getString("playerClick.messages.clickingPlayer", "").replace("%player%", clickPlayer.getName()).replace("%description%", description);
+                } else {
+                    message = plugin.config.getString("playerClick.messages.clickWithoutDesc", "").replace("%player%", clickPlayer.getName());
+                }
 
+                clickingPlayer.sendMessage(MiniMessage.miniMessage().deserialize(message));
+            } else {
+                String message = plugin.config.getString("playerClick.messages.clickingPlayerNoDescription", "%player%").replace("%player%", clickPlayer.getName());
+                clickingPlayer.sendActionBar(MiniMessage.miniMessage().deserialize(message));
+            }
+
+
+            clickPlayer.sendMessage(MiniMessage.miniMessage().deserialize(plugin.config.getString("playerClick.messages.clickPlayer", "").replace("%player%", clickingPlayer.getName())));
+
+            lastInteractionTimes.put(clickingPlayer, currentTime);
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> lastInteractionTimes.remove(clickingPlayer), cooldown / 50);
         }
     }

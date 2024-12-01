@@ -4,14 +4,17 @@ main: me.wertiko.elyTools.ElyTools
 api-version: '1.21'
 
 commands:
-  description:
-    usage: /<command>
   size:
     description: Edit self size
-    usage: /size <размер>
+  description:
+    description: Toggle self desc
+  elytools:
+    description: Reload configuration
 
 permissions:
   elytools.description:
-    default: false
+    default: op
   elytools.size:
-    default: false
+    default: op
+  elytools.reload:
+    default: op

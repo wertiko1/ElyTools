@@ -1,13 +1,42 @@
-# Module size
+# Модуль size
 size:
-  size-min: 0.7
-  size-max: 1.1
-  size-step: 0.1
+  sizeMin: 0.7
+  sizeMax: 1.1
+  sizeStep: 0.1
 
-  # Substitute %size%
   messages:
-    fail: "&cВведите одно из предложенных значений!"
-    success: "&fВаш размер изменён на &7%size%"
-    no-permission: "&cУ тебя нет права использовать эту команду!"
+    usage: "Использование: /size <размер>"
+    failMessage: "Введите одно из предложенных значений!"
+    successMessage: "Ваш размер изменён на %size%"
+    invalidSize: "Недопустимый размер! Выберите одно из: "
 
-  need-permission: true
+  needPermission: true
+
+# Модуль PlayerClick
+# Форматирование с помощью https://docs.advntr.dev/minimessage/format.html
+playerClick:
+  messages:
+    noDescription: "Введите описание!"
+    descriptionUpdated: "Ваше описание обновлено!"
+    descriptionTooLong: "Описание не должно превышать 16 символов!"
+    clickPlayer: "Вас толкнул %player%"
+    clickingPlayer: "Вы толкнули %player%\nОписание: %description%"
+    clickWithoutDesc: "Вы толкнули %player%"
+    clickingPlayerNoDescription: "%player%"
+    invalidArgument: "Неизвестная команда. Попробуйте: toggle, set, clear"
+
+# Модуль описание для PlayerClick
+description:
+  messages:
+    enabled: "Описание включено."
+    disabled: "Описание отключено."
+
+# Данные для подключения к базе данных
+database:
+  url: ""
+  user: ""
+  password: ""
+
+noPermission: "У тебя нет права использовать эту команду!"
+# Префикс плагина
+prefix: ""
